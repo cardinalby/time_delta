@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core testlib
 
 QT       -= gui
 
@@ -16,7 +16,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    ../time_delta.cpp
+    ../time_delta.cpp \
+    tester.cpp
 
 HEADERS += \
-    ../time_delta.h
+    ../time_delta.h \
+    tester.h

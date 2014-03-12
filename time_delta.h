@@ -1,12 +1,16 @@
 #pragma once
 
-#include <stdint.h>
-#include <QDateTime>
+#include <QtGlobal>
+
+class QDateTime;
+class QDate;
+class QTime;
 
 class TimeDelta
 {
   public:
-    TimeDelta() : delta_(0) {}
+    TimeDelta();
+    TimeDelta(const TimeDelta& other);
 
     // Converts units of time to TimeDeltas.
     static TimeDelta FromDays(qint64 days);
@@ -63,11 +67,11 @@ class TimeDelta
     // Comparison operators.
     bool operator == (const TimeDelta& other) const;
 
-    bool operator != (TimeDelta other) const;
-    bool operator < (TimeDelta other) const;
-    bool operator <= (TimeDelta other) const;
-    bool operator > (TimeDelta other) const;
-    bool operator >= (TimeDelta other) const;
+    bool operator != (const TimeDelta& other) const;
+    bool operator < (const TimeDelta& other) const;
+    bool operator <= (const TimeDelta& other) const;
+    bool operator > (const TimeDelta& other) const;
+    bool operator >= (const TimeDelta& other) const;
 
   private:
     // Constructs a delta given the duration in microseconds. This is private
@@ -81,19 +85,19 @@ class TimeDelta
 TimeDelta operator * (qint64 a, TimeDelta delta);
 
 // QDate after adding TimeDelta extends to QDateTime
-QDateTime operator + (QDateTime dt, TimeDelta delta);
-QDateTime operator + (QDate d, TimeDelta delta);
-QDateTime operator + (TimeDelta delta, QDateTime dt);
-QDateTime operator + (TimeDelta delta, QDate d);
-QDateTime operator - (QDateTime dt, TimeDelta delta);
-QDateTime operator - (QDate d, TimeDelta delta);
+QDateTime operator + (const QDateTime& dt, const TimeDelta& delta);
+QDateTime operator + (const QDate& d, const TimeDelta& delta);
+QDateTime operator + (const TimeDelta& delta, const QDateTime& dt);
+QDateTime operator + (const TimeDelta& delta, const QDate& d);
+QDateTime operator - (const QDateTime& dt, const TimeDelta& delta);
+QDateTime operator - (const QDate& d, const TimeDelta& delta);
 
 // Can't change QDate
-QDateTime& operator += (QDateTime& dt, TimeDelta delta);
-QDateTime& operator -= (QDateTime& dt, TimeDelta delta);
+QDateTime& operator += (QDateTime& dt, const TimeDelta& delta);
+QDateTime& operator -= (QDateTime& dt, const TimeDelta& delta);
 
-TimeDelta operator - (QDateTime dt_left, QDateTime dt_right);
-TimeDelta operator - (QDateTime dt_left, QDate d_right);
-TimeDelta operator - (QDate d_left, QDateTime dt_right);
-TimeDelta operator - (QDate d_left, QDate d_right);
-TimeDelta operator - (QTime t_left, QTime t_right);
+TimeDelta operator - (const QDateTime& dt_left, const QDateTime& dt_right);
+TimeDelta operator - (const QDateTime& dt_left, const QDate& d_right);
+TimeDelta operator - (const QDate& d_left, const QDateTime& dt_right);
+TimeDelta operator - (const QDate& d_left, const QDate& d_right);
+TimeDelta operator - (const QTime& t_left, const QTime& t_right);

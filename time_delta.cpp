@@ -1,5 +1,7 @@
 #include "time_delta.h"
 
+#include <QDateTime>
+
 namespace {
 
 const qint64 kMillisecondsPerSecond = 1000;
@@ -14,6 +16,14 @@ const qint64 kNanosecondsPerMicrosecond = 1000;
 const qint64 kNanosecondsPerSecond = kNanosecondsPerMicrosecond *
                                            kMicrosecondsPerSecond;
 }  // namespace
+
+TimeDelta::TimeDelta()
+  : delta_(0)
+{}
+
+TimeDelta::TimeDelta(const TimeDelta& other)
+  : delta_(other.delta_)
+{}
 
 TimeDelta TimeDelta::FromDays(qint64 days)
 {
@@ -90,76 +100,76 @@ qint64 TimeDelta::ToInternalValue() const {
   return delta_;
 }
 
-TimeDelta& TimeDelta::operator =(const TimeDelta &other) {
+TimeDelta& TimeDelta::operator = (const TimeDelta &other) {
   delta_ = other.delta_;
   return *this;
 }
 
-TimeDelta TimeDelta::operator +(const TimeDelta &other) const {
+TimeDelta TimeDelta::operator + (const TimeDelta &other) const {
   return TimeDelta(delta_ + other.delta_);
 }
 
-bool TimeDelta::operator ==(const TimeDelta &other) const {
+bool TimeDelta::operator == (const TimeDelta &other) const {
   return delta_ == other.delta_;
 }
 
-bool TimeDelta::operator !=(TimeDelta other) const {
+bool TimeDelta::operator != (const TimeDelta& other) const {
   return delta_ != other.delta_;
 }
 
-bool TimeDelta::operator <(TimeDelta other) const {
+bool TimeDelta::operator < (const TimeDelta& other) const {
   return delta_ < other.delta_;
 }
 
-bool TimeDelta::operator <=(TimeDelta other) const {
+bool TimeDelta::operator <= (const TimeDelta& other) const {
   return delta_ <= other.delta_;
 }
 
-bool TimeDelta::operator >(TimeDelta other) const {
+bool TimeDelta::operator > (const TimeDelta& other) const {
   return delta_ > other.delta_;
 }
 
-bool TimeDelta::operator >=(TimeDelta other) const {
+bool TimeDelta::operator >= (const TimeDelta& other) const {
   return delta_ >= other.delta_;
 }
 
-TimeDelta& TimeDelta::operator +=(const TimeDelta &other) {
+TimeDelta& TimeDelta::operator += (const TimeDelta& other) {
   delta_ += other.delta_;
   return *this;
 }
 
-TimeDelta &TimeDelta::operator -=(const TimeDelta &other) {
+TimeDelta &TimeDelta::operator -=(const TimeDelta& other) {
   delta_ -= other.delta_;
   return *this;
 }
 
-TimeDelta TimeDelta::operator -() const {
+TimeDelta TimeDelta::operator - () const {
   return TimeDelta(-delta_);
 }
 
-TimeDelta TimeDelta::operator *(qint64 a) const {
+TimeDelta TimeDelta::operator * (qint64 a) const {
   return TimeDelta(delta_ * a);
 }
 
-TimeDelta& TimeDelta::operator *=(qint64 a) {
+TimeDelta& TimeDelta::operator *= (qint64 a) {
   delta_ *= a;
   return *this;
 }
 
-TimeDelta& TimeDelta::operator /=(qint64 a) {
+TimeDelta& TimeDelta::operator /= (qint64 a) {
   delta_ /= a;
   return *this;
 }
 
-qint64 TimeDelta::operator /(const TimeDelta &a) const {
+qint64 TimeDelta::operator / (const TimeDelta& a) const {
   return delta_ / a.delta_;
 }
 
-TimeDelta TimeDelta::operator /(qint64 a) const {
+TimeDelta TimeDelta::operator / (qint64 a) const {
   return TimeDelta(delta_ / a);
 }
 
-TimeDelta TimeDelta::operator -(const TimeDelta &other) const {
+TimeDelta TimeDelta::operator - (const TimeDelta& other) const {
   return TimeDelta(delta_ - other.delta_);
 }
 
@@ -172,67 +182,67 @@ TimeDelta operator * (qint64 a, TimeDelta delta)
   return delta * a;
 }
 
-QDateTime operator + (QDateTime dt, TimeDelta delta)
+QDateTime operator + (const QDateTime& dt, const TimeDelta &delta)
 {
   return dt.addMSecs(delta.InMilliseconds());
 }
 
-QDateTime operator + (QDate d, TimeDelta delta)
+QDateTime operator + (const QDate& d, const TimeDelta &delta)
 {
   return QDateTime(d) + delta;
 }
 
-QDateTime operator + (TimeDelta delta, QDateTime dt)
+QDateTime operator + (const TimeDelta& delta, const QDateTime& dt)
 {
   return dt.addMSecs(delta.InMilliseconds());
 }
 
-QDateTime operator + (TimeDelta delta, QDate d)
+QDateTime operator + (const TimeDelta& delta, const QDate& d)
 {
   return QDateTime(d) + delta;
 }
 
-QDateTime operator - (QDateTime dt, TimeDelta delta)
+QDateTime operator - (const QDateTime& dt, const TimeDelta& delta)
 {
   return dt.addMSecs(-1 * delta.InMilliseconds());
 }
 
-QDateTime operator - (QDate d, TimeDelta delta)
+QDateTime operator - (const QDate& d, const TimeDelta& delta)
 {
   return QDateTime(d) - delta;
 }
 
-QDateTime& operator += (QDateTime& dt, TimeDelta delta)
+QDateTime& operator += (QDateTime& dt, const TimeDelta& delta)
 {
   return (dt = dt + delta);
 }
 
-QDateTime& operator -= (QDateTime& dt, TimeDelta delta)
+QDateTime& operator -= (QDateTime& dt, const TimeDelta& delta)
 {
   return (dt = dt - delta);
 }
 
-TimeDelta operator -(QDateTime dt_left, QDateTime dt_right)
+TimeDelta operator - (const QDateTime& dt_left, const QDateTime& dt_right)
 {
-  return TimeDelta::FromMilliseconds(dt_left.msecsTo(dt_right));
+  return TimeDelta::FromMilliseconds(dt_right.msecsTo(dt_left));
 }
 
-TimeDelta operator -(QDateTime dt_left, QDate d_right)
+TimeDelta operator - (const QDateTime& dt_left, const QDate& d_right)
 {
   return dt_left - QDateTime(d_right);
 }
 
-TimeDelta operator -(QDate d_left, QDateTime dt_right)
+TimeDelta operator - (const QDate& d_left, const QDateTime& dt_right)
 {
   return QDateTime(d_left) - dt_right;
 }
 
-TimeDelta operator -(QDate d_left, QDate d_right)
+TimeDelta operator - (const QDate& d_left, const QDate& d_right)
 {
-  return TimeDelta::FromDays(d_left.daysTo(d_right));
+  return TimeDelta::FromDays(d_right.daysTo(d_left));
 }
 
-TimeDelta operator -(QTime t_left, QTime t_right)
+TimeDelta operator - (const QTime& t_left, const QTime& t_right)
 {
-  return TimeDelta::FromMilliseconds(t_left.msecsTo(t_right));
+  return TimeDelta::FromMilliseconds(t_right.msecsTo(t_left));
 }
